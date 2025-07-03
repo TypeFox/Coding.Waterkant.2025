@@ -1,22 +1,23 @@
 import type { Model } from '../language/generated/ast.js';
-import { expandToNode, joinToNode, toString } from 'langium/generate';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { extractDestinationAndName } from './cli-util.js';
+import { NodeFileSystem } from 'langium/node';
+import { createSemiformalWebAppsServices } from '../language/semiformal-web-apps-module.js';
 
-export function generateJavaScript(model: Model, filePath: string, destination: string | undefined): string {
+export function generateJSON(model: Model, filePath: string, destination: string | undefined): string {
     const data = extractDestinationAndName(filePath, destination);
-    const generatedFilePath = `${path.join(data.destination, data.name)}.js`;
+    const generatedFilePath = `${path.join(data.destination, data.name)}.json`;
 
-    const fileNode = expandToNode`
-        "use strict";
-
-        ${joinToNode(model.greetings, greeting => `console.log('Hello, ${greeting.person.ref?.name}!');`, { appendNewLineIfNotEmpty: true })}
-    `.appendNewLineIfNotEmpty();
+    const services = createSemiformalWebAppsServices(NodeFileSystem).SemiformalWebApps;
+    const json = services.serializer.JsonSerializer.serialize(model, {
+        comments: true,
+        space: 4
+    });
 
     if (!fs.existsSync(data.destination)) {
         fs.mkdirSync(data.destination, { recursive: true });
     }
-    fs.writeFileSync(generatedFilePath, toString(fileNode));
-    return generatedFilePath;
+    fs.writeFileSync(generatedFilePath, json);
+    return json;
 }

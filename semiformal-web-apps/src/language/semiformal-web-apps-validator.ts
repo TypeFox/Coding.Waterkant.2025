@@ -1,5 +1,5 @@
 import type { ValidationAcceptor, ValidationChecks } from 'langium';
-import type { SemiformalWebAppsAstType, Person } from './generated/ast.js';
+import type { SemiformalWebAppsAstType, Model } from './generated/ast.js';
 import type { SemiformalWebAppsServices } from './semiformal-web-apps-module.js';
 
 /**
@@ -9,7 +9,7 @@ export function registerValidationChecks(services: SemiformalWebAppsServices) {
     const registry = services.validation.ValidationRegistry;
     const validator = services.validation.SemiformalWebAppsValidator;
     const checks: ValidationChecks<SemiformalWebAppsAstType> = {
-        Person: validator.checkPersonStartsWithCapital
+        Model: validator.checkTechStack
     };
     registry.register(checks, validator);
 }
@@ -19,12 +19,14 @@ export function registerValidationChecks(services: SemiformalWebAppsServices) {
  */
 export class SemiformalWebAppsValidator {
 
-    checkPersonStartsWithCapital(person: Person, accept: ValidationAcceptor): void {
-        if (person.name) {
-            const firstChar = person.name.substring(0, 1);
-            if (firstChar.toUpperCase() !== firstChar) {
-                accept('warning', 'Person name should start with a capital.', { node: person, property: 'name' });
-            }
+    checkTechStack(model: Model, accept: ValidationAcceptor): void {
+        if (model.techstack) {
+            const { techstack } = model;
+            techstack.forEach(tech => {
+                if (tech === '') {
+                    accept('warning', 'A tech stack definitioncannot be empty.', { node: model, property: 'techstack' });
+                }
+            });
         }
     }
 
