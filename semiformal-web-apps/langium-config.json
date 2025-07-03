@@ -1,0 +1,15 @@
+{
+    "projectName": "SemiformalWebApps",
+    "languages": [{
+        "id": "semiformal-web-apps",
+        "grammar": "src/language/semiformal-web-apps.langium",
+        "fileExtensions": [".swa"],
+        "textMate": {
+            "out": "syntaxes/semiformal-web-apps.tmLanguage.json"
+        },
+        "monarch": {
+            "out": "src/syntaxes/semiformal-web-apps.monarch.ts"
+        }
+    }],
+    "out": "src/language/generated"
+}
