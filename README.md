@@ -4,7 +4,7 @@ This is a project template for the Coding.Waterkant 2025, consiting of a **Langi
 
 ## Prerequisites
 
-* Install [VSCode](https://code.visualstudio.com/) or [Cursor](https://www.cursor.com/)
+* Install [Cursor](https://www.cursor.com/) (recommended) or [VSCode](https://code.visualstudio.com/) (no AI support for creating new examples)
 * Install Node LTS (v22.17.0)
   <details>
     <ol>
@@ -23,13 +23,21 @@ This is a project template for the Coding.Waterkant 2025, consiting of a **Langi
    ```sh
    npm run build
    ```
+3. Edit example models:
+   ```sh
+   code . # then press F5 to run the language extension in VSCode
+   ```
 
 ## Important files
 
 ```py
 ./packages/
-├─ semiformal-web-apps/
-│  ├─ src/
-│  │  ├─ language/
-│  │  │  ├─ semiformal-web-apps.langium  # Langium grammar
+├─ example-web-apps/
+│  ├─ .cursor/rules/
+│  │  └─ semiform-rules.mdc # Example generator instructions
+│  └─ *.swa                 # Semiformal Web App models
+└─ semiformal-web-apps/
+   └─ src/
+      └─ language/
+         └─ semiformal-web-apps.langium # Langium grammar
 ```
