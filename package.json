@@ -1,0 +1,38 @@
+{
+    "name": "coding-waterkant-typefox",
+    "version": "0.0.1",
+    "private": true,
+    "description": "Project template for Coding.Waterkant 2025",
+    "type": "module",
+    "workspaces": [
+        "packages/semiformal-web-apps"
+    ],
+    "scripts": {
+        "build": "npm run langium:generate && npm run langium:build",
+        "langium:build": "npm run build --workspaces=packages/semiformal-web-apps",
+        "langium:generate": "npm run langium:generate --workspace=packages/semiformal-web-apps",
+        "clean": "rimraf packages/*/node_modules"
+    },
+    "devDependencies": {
+        "rimraf": "^6.0.1"
+    },
+    "keywords": [
+        "Langium",
+        "Semiformal",
+        "AI"
+    ],
+    "author": "TypeFox GmbH",
+    "license": "MIT",
+    "homepage": "https://github.com/TypeFox/Coding.Waterkant#readme",
+    "bugs": {
+        "url": "https://github.com/TypeFox/Coding.Waterkant/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/TypeFox/Coding.Waterkant.git"
+    },
+    "engines": {
+        "vscode": "^1.67.0",
+        "node": ">=18.0.0"
+    }
+}
