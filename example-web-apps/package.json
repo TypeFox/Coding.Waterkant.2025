@@ -1,0 +1,11 @@
+{
+    "name": "example-web-apps",
+    "version": "0.0.1",
+    "private": true,
+    "description": "Example web applications",
+    "scripts": {
+        "generate": "time ./scripts/generate.sh"
+    },
+    "author": "TypeFox GmbH",
+    "license": "MIT"
+}

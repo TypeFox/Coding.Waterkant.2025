@@ -17,7 +17,7 @@ const packageContent = await fs.readFile(packagePath, 'utf-8');
 export const generateAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createSemiformalWebAppsServices(NodeFileSystem).SemiformalWebApps;
     const model = await extractAstNode<Model>(fileName, services);
-    const generatedFilePath = generateJSON(model, fileName, opts.destination);
+    const generatedFilePath = generateJSON(model, fileName, opts.destination, services);
     console.log(chalk.green(`JavaScript code generated successfully: ${generatedFilePath}`));
 };
 
@@ -32,9 +32,8 @@ export default function(): void {
 
     const fileExtensions = SemiformalWebAppsLanguageMetaData.fileExtensions.join(', ');
     program
-        .command('generate')
+        .command('parse')
         .argument('<file>', `source file (possible file extensions: ${fileExtensions})`)
-        .option('-d, --destination <dir>', 'destination directory of generating')
         .description('generates a JSON representation of the given <file>')
         .action(generateAction);
 

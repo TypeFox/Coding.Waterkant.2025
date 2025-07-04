@@ -136,7 +136,7 @@ To explain the DSL structure further:
     They serve more as an intent. Pages can contain components or could be a component.
 
 
-The extension of a semiform file is `.swa`.
+The extension of a semiform file is `.swa`. Semiform files are located in the `./models` directory. Please make sure to create the file in the correct directory.
 
 ## Transforming user questions into semiform:
 
