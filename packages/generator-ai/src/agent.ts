@@ -1,6 +1,7 @@
-import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOllama } from 'ollama-ai-provider';
+import { createOpenAI } from '@ai-sdk/openai';
 import type { LanguageModelV1 } from '@ai-sdk/provider';
 import { CoreMessage, generateText } from 'ai';
 import { z } from 'zod';
@@ -39,7 +40,7 @@ export function createAgent(baseFolder: string, config: AgentConfig): Agent {
 
       console.log(`\n🤖 Running agent with ${messages.length} messages in history`);
 
-      const generationPromise = generateText({
+      const result = await generateText({
         model,
         system,
         messages,
@@ -54,12 +55,6 @@ export function createAgent(baseFolder: string, config: AgentConfig): Agent {
           }
         }
       });
-      // Add timeout to prevent hanging
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error('Generation timed out after 10 minutes')), 10 * 60 * 1000);
-      });
-
-      const result = await Promise.race([generationPromise, timeoutPromise]);
 
       console.log('🤖 Agent finished successfully. Token usage:', {
         promptTokens: result.usage?.promptTokens,
@@ -76,10 +71,12 @@ function createLanguageModel(apiKey: string | undefined, baseURL: string | undef
   switch (providerName) {
     case 'anthropic':
       return createAnthropic({ apiKey }).languageModel(modelName);
-    case 'openai':
-      return createOpenAI({ apiKey }).languageModel(modelName);
+    case 'google':
+      return createGoogleGenerativeAI({ apiKey }).languageModel(modelName);
     case 'ollama':
       return createOllama({ baseURL }).languageModel(modelName);
+    case 'openai':
+      return createOpenAI({ apiKey }).languageModel(modelName);
     default:
       throw new Error(`Unknown provider: ${providerName}`);
   }
