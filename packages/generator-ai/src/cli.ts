@@ -6,7 +6,6 @@ import { generate } from './generator.js';
 
 // Entry point for the CLI
 main().then(() => {
-  console.log('\n🤗 Generator AI finished successfully');
   process.exit(0);
 }).catch(error => {
   console.error(error);
@@ -25,7 +24,10 @@ async function main(): Promise<void> {
 
   // Create agent
   const agent = createAgent(destination, { apiKey, providerName, modelName, maxTokens: parseInt(maxTokens), temperature: parseFloat(temperature) });
-  return generate(agent, webAppModel, destination);
+  await generate(agent, webAppModel, destination);
+
+  console.log('\n🤗 Generator AI finished successfully.');
+  console.log(`👉 Follow the instructions in the ${destination}/backend/README.md and ${destination}/frontend/README.md files to run the app.`);
 }
 
 async function processStdin(): Promise<string> {

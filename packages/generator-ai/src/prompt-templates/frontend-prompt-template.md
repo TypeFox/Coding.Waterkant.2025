@@ -69,6 +69,14 @@ Frontend code must follows the following constraints (only relevant to frontend 
 - For icons use react-icons (don't forget to add it as a dependency).
 - Avoid importing unused symbol and use proper type system (we use strict mode and no-unused-vars)
 
+Add a README.md file to the frontend folder that contains the following information:
+- The command line to run the frontend
+- The purpose of the frontend
+- The technologies used
+- The design and style
+- The components and their purpose
+- The pages and their purpose
+
 Last remarks:
 - backend will run on localhost:3001
 - frontend will run on localhost:3000

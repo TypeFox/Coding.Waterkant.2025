@@ -74,6 +74,15 @@ POSTGRES_DB=postgres
 - Schema must respect the names entered by the user (per schema)
 - Avoid importing unused symbol and use proper type system (we use strict mode and no-unused-vars)
 
+Add a README.md file to the backend folder that contains the following information:
+- The command line to run the backend
+- The purpose of the backend
+- The technologies used
+- The database schema
+- The API routes
+- The authentication and authorization logic
+- The data flow
+
 Last remarks:
 - backend will run on localhost:3001
 - frontend will run on localhost:3000
