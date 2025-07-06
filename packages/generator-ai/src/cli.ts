@@ -14,16 +14,20 @@ main().then(() => {
 
 async function main(): Promise<void> {
 
+  // Parse environment variables
+  const apiKey = process.env.API_KEY;
+  const baseURL = process.env.BASE_URL;
+  const [ providerName, modelName ] = (process.env.MODEL || '').replace(/^([^:]*):(.*)$/, '$1,$2').split(',');
+  const maxTokens = parseInt(process.env.MAX_TOKENS || "4096");
+  const temperature = parseFloat(process.env.TEMPERATURE || "0.0");
+  const debug = process.env.DEBUG === 'true';
+
   // Parse command line arguments
-  const apiKey = process.env.API_KEY || '';
-  const [ providerName, modelName ] = (process.env.MODEL || '').split(':');
-  const maxTokens = process.env.MAX_TOKENS || '4096';
-  const temperature = process.env.TEMPERATURE || '0.2';
   const destination = process.argv[2] || '.';
   const webAppModel = await processStdin();
 
   // Create agent
-  const agent = createAgent(destination, { apiKey, providerName, modelName, maxTokens: parseInt(maxTokens), temperature: parseFloat(temperature) });
+  const agent = createAgent(destination, { apiKey, baseURL, providerName, modelName, maxTokens, temperature, debug });
   await generate(agent, webAppModel, destination);
 
   console.log('\n🤗 Generator AI finished successfully.');

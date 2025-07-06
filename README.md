@@ -17,6 +17,14 @@ The project consists of a **Langium grammar** defining the Semiformal Web Apps (
   </details>
 * Install [Cursor IDE](https://www.cursor.com/) (recommended) or [VSCode](https://code.visualstudio.com/) (no AI support for creating new examples)
 * Install [Docker](https://www.docker.com/) for running the example web apps
+* Install [Ollama](https://ollama.ai/) for using AI models locally
+  <details>
+    <ol>
+      <li>Download and install Ollama from <a href='https://ollama.ai/'>https://ollama.ai/</a></li>
+      <li>Run Ollama.app and allow to expose it to the network</li>
+      <li>Pull the Qwen3 14B model: <code>ollama pull qwen3:14b</code></li>
+    </ol>
+  </details>
 
 ## Installation
 
@@ -52,7 +60,7 @@ example-web-apps/
 From there you can:
 
 * Edit existing web app model files `models/*.swa` that describe a web app's structure
-* Generate a new web app based on a .swa model:
+* Generate a new web app based on a .swa model (when using Ollama, run `ollama serve` in a terminal):
   ```sh
   # The app is generated in `output/<app-name>/`
   npm run generate <models/my-model.swa> <app-name>

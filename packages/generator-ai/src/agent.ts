@@ -1,5 +1,6 @@
 import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
+import { createOllama } from 'ollama-ai-provider';
 import type { LanguageModelV1 } from '@ai-sdk/provider';
 import { CoreMessage, generateText } from 'ai';
 import { z } from 'zod';
@@ -11,11 +12,13 @@ export interface Agent {
 }
 
 export interface AgentConfig {
-  apiKey: string;
+  apiKey: string | undefined;
+  baseURL: string | undefined;
   providerName: string;
   modelName: string;
   maxTokens: number;
   temperature: number;
+  debug: boolean;
 }
 
 /**
@@ -25,9 +28,11 @@ export interface AgentConfig {
  * @returns An agent that can generate files.
  */
 export function createAgent(baseFolder: string, config: AgentConfig): Agent {
-  const { providerName, modelName, apiKey, maxTokens, temperature } = config;
-  const model = createLanguageModel(apiKey, providerName, modelName);
-  console.log(`\n🔌 Using ${providerName} model ${modelName} with temperature ${temperature} and max tokens ${maxTokens}`);
+  const { providerName, modelName, apiKey, baseURL, maxTokens, temperature, debug } = config;
+  const model = createLanguageModel(apiKey, baseURL, providerName, modelName);
+
+  console.log(`\n🔌 Using ${providerName} model ${modelName}${baseURL ? ` (${baseURL})` : ''} with temperature ${temperature} and max tokens ${maxTokens}`);
+
   return {
     generateFiles: async (system: string, messages: CoreMessage[]) => {
       const projectDir = baseFolder;
@@ -42,7 +47,12 @@ export function createAgent(baseFolder: string, config: AgentConfig): Agent {
         temperature,
         maxSteps: 1000,
         tools: createTools(projectDir),
-        toolChoice: 'auto'
+        toolChoice: 'auto',
+        onStepFinish: (step) => {
+          if (debug) {
+            console.log(`🤖 Step: ${JSON.stringify(step, null, 2)}`);
+          }
+        }
       });
       // Add timeout to prevent hanging
       const timeoutPromise = new Promise<never>((_, reject) => {
@@ -62,12 +72,14 @@ export function createAgent(baseFolder: string, config: AgentConfig): Agent {
   }
 }
 
-function createLanguageModel(apiKey: string, providerName: string, modelName: string): LanguageModelV1 {
+function createLanguageModel(apiKey: string | undefined, baseURL: string | undefined, providerName: string, modelName: string): LanguageModelV1 {
   switch (providerName) {
-    case 'openai':
-      return createOpenAI({ apiKey }).languageModel(modelName);
     case 'anthropic':
       return createAnthropic({ apiKey }).languageModel(modelName);
+    case 'openai':
+      return createOpenAI({ apiKey }).languageModel(modelName);
+    case 'ollama':
+      return createOllama({ baseURL }).languageModel(modelName);
     default:
       throw new Error(`Unknown provider: ${providerName}`);
   }
@@ -75,19 +87,6 @@ function createLanguageModel(apiKey: string, providerName: string, modelName: st
 
 function createTools(projectDir: string) {
   return {
-    planProject: {
-      description: 'Plan the project structure with a list of files and their descriptions',
-      parameters: z.object({
-        projectName: z.string().describe('Name of the project'),
-        files: z.array(z.object({
-          path: z.string().describe('File path relative to project root'),
-          description: z.string().describe('Description of what this file contains')
-        })).describe('List of files to create')
-      }),
-      execute: async ({ projectName, files }: { projectName: string; files: Array<{ path: string; description: string }> }) => {
-        return executePlanProject(projectDir, projectName, files);
-      }
-    },
     writeFile: {
       description: 'Write content to a specific file',
       parameters: z.object({
@@ -99,26 +98,6 @@ function createTools(projectDir: string) {
       }
     }
   };
-}
-
-async function executePlanProject(
-  projectDir: string,
-  projectName: string,
-  files: Array<{ path: string; description: string }>
-): Promise<string> {
-  console.log(`\n📋 Stage 1: Planning project: ${projectName}`);
-  console.log(`📁 Files to create: ${files.length}`);
-  
-  files.forEach((file: { path: string; description: string }) => {
-    console.log(`   - ${file.path}: ${file.description}`);
-  });
-  
-  // Create project directory
-  await fs.promises.mkdir(projectDir, { recursive: true });
-
-  console.log(`\n✨ Stage 2: Generating files for project: ${projectName}`);
-  
-  return `Project "${projectName}" planned with ${files.length} files. Ready to generate content.`;
 }
 
 async function executeWriteFile(

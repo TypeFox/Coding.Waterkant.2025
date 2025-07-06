@@ -25,8 +25,9 @@ if [ -d "${output_dir}" ]; then
         exit 1
     fi
     echo
+    mkdir -p "${output_dir}"
 else
-    mkdir -p "${output_dir}" && echo "Output directory created: ${output_dir}"
+  mkdir -p "${output_dir}" && echo "Output directory created: ${output_dir}"
 fi
 
 node ../packages/semiformal-web-apps/bin/cli.js parse "${model_path}" | node ../packages/generator-ai/out/cli.cjs "${output_dir}"

@@ -24,23 +24,17 @@ The specification emitted to you is well structured and follow a MVC-like model:
 6.  Pages: A page serve as the highlight level of Component hierarchy. They can be translated as component,
     They serve more as an intent. Pages can contain components or could be a component.
 
-The project is generated in two stages. Do both stages in this single response.
-Stage 1: Plan the project by calling the planProject tool with a list of files and their descriptions.
-Stage 2: Generate the actual content for each planned file and use the writeFile tool to save each file.
-
-For stage 1, follow these steps:
+Follow these steps to generate the source code:
 
 1. Analyze the project description carefully, identifying key requirements, features, and functionalities.
 
 2. Plan the overall structure of the code, including necessary classes, functions, and modules.
 
-For stage 2, follow these steps:
+3. Generate the source code, ensuring that it adheres to best practices and coding standards for the specified programming language.
 
-1. Generate the source code, ensuring that it adheres to best practices and coding standards for the specified programming language.
+4. Add appropriate comments throughout the code to explain complex logic, important decisions, and the purpose of each major section.
 
-2. Add appropriate comments throughout the code to explain complex logic, important decisions, and the purpose of each major section.
-
-3. Include a brief documentation at the beginning of the code, explaining its overall purpose and how to use it.
+5. Include a brief documentation at the beginning of the code, explaining its overall purpose and how to use it.
 
 Backend code must be within a "backend" folder.
 Backend code must follows the following constraints:

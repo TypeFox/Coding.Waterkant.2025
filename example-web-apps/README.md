@@ -4,10 +4,18 @@
 
 Edit the `.env` file to set the AI model and temperature.
 
+When using Ollama, run `ollama serve` in a terminal.
+
 ```sh
 # The app is generated in `output/<app-name>/`
 npm run generate <models/my-model.swa> <app-name>
 ```
+
+Please note:
+
+* Local models can run several minutes, while remote models are relatively fast. So be patient.
+* Ollama tool calls are sometimes unreliable. If you get an error, try again.
+* Enabling debug mode in the `.env` file can help.
 
 ## Creating new web app models
 
