@@ -64,6 +64,8 @@ Frontend code must follows the following constraints (only relevant to frontend 
 - Do not generate `reportWebVitals`.
 - For icons use react-icons (don't forget to add it as a dependency).
 - Avoid importing unused symbol and use proper type system (we use strict mode and no-unused-vars)
+- Hint: Objects of type ReactNode can't be used as a JSX component
+- Don't generate commented out code/dead code.
 
 Add a README.md file to the frontend folder that contains the following information:
 - The command line to run the frontend
