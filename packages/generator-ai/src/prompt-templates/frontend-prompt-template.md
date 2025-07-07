@@ -52,6 +52,7 @@ Frontend code must follows the following constraints (only relevant to frontend 
     - tailwind.config.js
     - App.tsx
 - Code must be runnable out of the box, there for ensure proper configuration, requirements and dependecies.
+- Set `"noUnusedLocals": false` in the tsconfig.json file.
 - The frontend must look good.
 - Infer the design and style based on the schema, context and what the application is about.
 - The frontend must be properly styled and look rich.
