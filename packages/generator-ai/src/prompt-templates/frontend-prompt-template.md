@@ -37,8 +37,7 @@ Follow these steps to generate the source code. The output should be a series of
 
 5. Include a brief documentation at the beginning of the code, explaining its overall purpose and how to use it.
 
-6. If you use a non-built-in dependecy, include it in the `package.json` file. If this dependecy also has a type-definition package,
-   include the latter as a dev-dependency.
+6. If you use a non-built-in dependecy, include it in the `package.json` file. If this dependecy also has a type-definition package, include the latter as a dev-dependency.
 
 Frontend code must be within a "frontend" folder.
 Frontend code must follows the following constraints (only relevant to frontend code):
