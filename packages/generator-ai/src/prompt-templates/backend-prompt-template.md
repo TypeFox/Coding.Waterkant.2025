@@ -37,6 +37,8 @@ Follow these steps to generate the source code. The output should be a series of
 
 5. Include a brief documentation at the beginning of the code, explaining its overall purpose and how to use it.
 
+6. Write the file(s) containing the project dependencies last to ensure proper configuration, requirements and dependecies. E.g. package.json, Dockerfile, docker-compose.yml, etc.
+
 Backend code must be within a "backend" folder.
 Backend code must follows the following constraints:
 - Code must be runnable out of the box, there for ensure proper configuration, requirements and dependecies.
