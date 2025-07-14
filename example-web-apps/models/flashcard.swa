@@ -1,0 +1,72 @@
+/**
+ * Learnify is a Flashcard App that allows you a user to learn any topic, via flashcards.
+ * This APP represents the UI 
+ */
+
+stack = [
+    "postgres", "react", "tailwind"
+]
+
+entity Deck {
+    id: number
+    name: String
+    /** Up to 1000 characters */
+    description: String
+    flashcards: Flashcard[]
+}
+
+entity Flashcard {
+    id: number
+    /** Up to 1000 characters */
+    question: String
+    /** Up to 1000 characters */
+    answer: String
+    deckId: number
+}
+
+entity FlashCardAnswer {
+    id: number
+    time: datetime
+    userAnswer: String
+}
+
+/**
+ * Allows a user to upload a PDF file, and then parse it in the backend, and then create a new deck with the flashcards.
+ * The process of creating the flashcards is a placeholder for now, and user will complete it
+ */
+page DocumentImporter {
+    uploadZone: ui::input
+}
+
+page DeckList {
+    deckList: Deck[]
+}
+
+/**
+ * A UI where user can play the deck, and see the flashcards, and answer the questions.
+ */
+page DeckPlay {
+    currentDeck: Deck
+    activeCard: Flashcard
+    userAnswer: ui::textarea
+}
+
+page DeckResults {
+    deck: Deck
+    results: FlashCardAnswer[]
+}
+
+/**
+ * Action to perform calculation and store in history
+ */
+action processDocument {
+    route: "/api/processDocument"
+    method: "POST"
+    returns: "{ result: success|error }"
+}
+
+action getDeck {
+    route: "/api/deck/{id}"
+    method: "GET"
+    returns: "Deck"
+}
