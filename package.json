@@ -13,8 +13,7 @@
         "build": "npm run langium:generate && npm run langium:build && npm run generator-ai:build",
         "langium:build": "npm run build --workspace=packages/semiformal-web-apps",
         "langium:generate": "npm run langium:generate --workspace=packages/semiformal-web-apps",
-        "generator-ai:build": "npm run build --workspace=packages/generator-ai",
-        "generate": "./scripts/generate.sh"
+        "generator-ai:build": "npm run build --workspace=packages/generator-ai"
     },
     "devDependencies": {
         "rimraf": "^6.0.1"
