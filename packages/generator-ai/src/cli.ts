@@ -18,7 +18,7 @@ async function main(): Promise<void> {
   const apiKey = process.env.API_KEY;
   const baseURL = process.env.BASE_URL;
   const [ providerName, modelName ] = (process.env.MODEL || '').replace(/^([^:]*):(.*)$/, '$1,$2').split(',');
-  const maxTokens = parseInt(process.env.MAX_TOKENS || "4096");
+  const maxOutputTokens = parseInt(process.env.MAX_OUTPUT_TOKENS || "4096");
   const temperature = parseFloat(process.env.TEMPERATURE || "0.0");
   const debug = process.env.DEBUG === 'true';
 
@@ -27,7 +27,7 @@ async function main(): Promise<void> {
   const webAppModel = await processStdin();
 
   // Create agent
-  const agent = createAgent(destination, { apiKey, baseURL, providerName, modelName, maxTokens, temperature, debug });
+  const agent = createAgent(destination, { apiKey, baseURL, providerName, modelName, maxOutputTokens, temperature, debug });
   await generate(agent, webAppModel, destination);
 
   console.log('\n🤗 Generator AI finished successfully.');

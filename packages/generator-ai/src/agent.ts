@@ -1,15 +1,15 @@
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { createOllama } from 'ollama-ai-provider';
+import { createOllama } from 'ollama-ai-provider-v2';
 import { createOpenAI } from '@ai-sdk/openai';
-import type { LanguageModelV1 } from '@ai-sdk/provider';
-import { CoreMessage, generateText } from 'ai';
+import type { LanguageModelV2 } from '@ai-sdk/provider';
+import { ModelMessage, ToolSet, generateText } from 'ai';
 import { z } from 'zod';
 import path from 'path';
 import fs from 'fs';
 
 export interface Agent {
-  generateFiles: (systemPrompt: string, messageHistory: CoreMessage[]) => Promise<void>;
+  generateFiles: (systemPrompt: string, messageHistory: ModelMessage[]) => Promise<void>;
 }
 
 export interface AgentConfig {
@@ -17,7 +17,7 @@ export interface AgentConfig {
   baseURL: string | undefined;
   providerName: string;
   modelName: string;
-  maxTokens: number;
+  maxOutputTokens: number;
   temperature: number;
   debug: boolean;
 }
@@ -29,13 +29,13 @@ export interface AgentConfig {
  * @returns An agent that can generate files.
  */
 export function createAgent(baseFolder: string, config: AgentConfig): Agent {
-  const { providerName, modelName, apiKey, baseURL, maxTokens, temperature, debug } = config;
+  const { providerName, modelName, apiKey, baseURL, maxOutputTokens, temperature, debug } = config;
   const model = createLanguageModel(apiKey, baseURL, providerName, modelName);
 
-  console.log(`\n🔌 Using ${providerName} model ${modelName}${baseURL ? ` (${baseURL})` : ''} with temperature ${temperature} and max tokens ${maxTokens}`);
+  console.log(`\n🔌 Using ${providerName} model ${modelName}${baseURL ? ` (${baseURL})` : ''} with temperature ${temperature} and max tokens ${maxOutputTokens}`);
 
   return {
-    generateFiles: async (system: string, messages: CoreMessage[]) => {
+    generateFiles: async (system: string, messages: ModelMessage[]) => {
       const projectDir = baseFolder;
 
       console.log(`\n🤖 Running agent with ${messages.length} messages in history`);
@@ -44,9 +44,9 @@ export function createAgent(baseFolder: string, config: AgentConfig): Agent {
         model,
         system,
         messages,
-        maxTokens,
+        maxOutputTokens,
         temperature,
-        maxSteps: 1000,
+        stopWhen: (step) => step.steps.length > 1000,
         tools: createTools(projectDir),
         toolChoice: 'auto',
         onStepFinish: (step) => {
@@ -57,17 +57,19 @@ export function createAgent(baseFolder: string, config: AgentConfig): Agent {
       });
 
       console.log('🤖 Agent finished successfully. Token usage:', {
-        promptTokens: result.usage?.promptTokens,
-        completionTokens: result.usage?.completionTokens,
+        changedInputTokens: result.usage?.cachedInputTokens,
+        inputTokens: result.usage?.inputTokens,
+        outputTokens: result.usage?.outputTokens,
+        reasoningTokens: result.usage?.reasoningTokens,
         totalTokens: result.usage?.totalTokens,
-        maxCompletionTokens: maxTokens,
+        maxOutputTokens: maxOutputTokens,
         modelName
       });
     }
   }
 }
 
-function createLanguageModel(apiKey: string | undefined, baseURL: string | undefined, providerName: string, modelName: string): LanguageModelV1 {
+function createLanguageModel(apiKey: string | undefined, baseURL: string | undefined, providerName: string, modelName: string): LanguageModelV2 {
   switch (providerName) {
     case 'anthropic':
       return createAnthropic({ apiKey }).languageModel(modelName);
@@ -82,11 +84,11 @@ function createLanguageModel(apiKey: string | undefined, baseURL: string | undef
   }
 }
 
-function createTools(projectDir: string) {
+function createTools(projectDir: string): ToolSet {
   return {
     writeFile: {
       description: 'Write content to a specific file',
-      parameters: z.object({
+      inputSchema: z.object({
         path: z.string().describe('File path to write to'),
         content: z.string().describe('Content to write to the file')
       }),
