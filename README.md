@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD033 -->
 # Semiformal Web Apps
 
 This is a project contributed by TypeFox to Coding.Waterkant 2025.
@@ -29,10 +30,13 @@ The project consists of a **Langium grammar** defining the Semiformal Web Apps (
 ## Installation
 
 1. Install dependencies (once):
+
    ```sh
    npm i
    ```
+
 2. Build the projects (when language or generator changes):
+
    ```sh
    npm run clean && npm run build
    ```
@@ -40,9 +44,11 @@ The project consists of a **Langium grammar** defining the Semiformal Web Apps (
 ## Usage
 
 1. Open the project in Cursor/VSCode:
+
    ```sh
    code .
    ```
+
 2. Press `F5` to open a new IDE instance with the language extension loaded. The workspace will be the `example-web-apps/` folder.
 3. Create your own `.env` file by copying `.env.template` and filling in your values.
 
@@ -61,6 +67,7 @@ From there you can:
 
 * Edit existing web app model files `models/*.swa` that describe a web app's structure
 * Generate a new web app based on a .swa model (when using Ollama, run `ollama serve` in a terminal):
+
   ```sh
   # The app is generated in `output/<app-name>/`
   npm run generate <models/my-model.swa> <app-name>
